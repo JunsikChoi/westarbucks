@@ -3,3 +3,4 @@ Django==3.2
 regex==2021.4.4
 selenium==3.141.0
 webdriver-manager==3.4.0
+mysqlclient==2.0.3
