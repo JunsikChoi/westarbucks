@@ -1,8 +1,5 @@
-import requests
-import urllib.request
 import re
 from pprint import pprint
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
