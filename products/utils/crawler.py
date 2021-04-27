@@ -1,4 +1,5 @@
 import re
+import csv
 from pprint import pprint
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -36,6 +37,8 @@ def crawl_starbucks_drinks():
             f"[LOG] Processing {len(drink_list)} drinks in category {category_name}..."
         )
 
+        # drink_list = drink_list[:1]
+
         for drink in drink_list:
             drink_id = drink.get_attribute("prod")
             drink_img_elem = drink.find_element_by_tag_name("img")
@@ -68,8 +71,8 @@ def crawl_starbucks_drinks():
 
         size_ml = float(re.findall(r"(\d+|\d+ )ml", drink_size_info)[0])
 
-        if re.findall(r"(\d+) fl oz", drink_size_info):
-            size_oz = float(re.findall(r"(\d+) fl oz", drink_size_info)[0])
+        if re.findall(r"(\d.\d+|\d+) fl oz", drink_size_info):
+            size_oz = float(re.findall(r"(\d.\d+|\d+) fl oz", drink_size_info)[0])
 
         nutrition_info_list = drink_detail_info.find_elements_by_xpath(
             ".//form/fieldset/div/div[2]/ul/li"
@@ -118,6 +121,24 @@ def crawl_starbucks_drinks():
 
     browser.quit()
 
+    return drink_db
+
+
+def save_to_csv(db, file_path):
+    print(f"[LOG] SAVING DATA IN CSV TO {file_path}...")
+
+    column_names = list(list(db.values())[0].keys())
+    data = list(db.values())
+
+    with open(file_path, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=column_names)
+        writer.writeheader()
+        for d in data:
+            writer.writerow(d)
+
+    return
+
 
 if __name__ == "__main__":
-    crawl_starbucks_drinks()
+    drink_db = crawl_starbucks_drinks()
+    save_to_csv(drink_db, "./data/starbucks_drinks.csv")
