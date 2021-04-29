@@ -16,10 +16,17 @@
 ## HOW TO RUN
 Setup python 3.8 environment + installed local SQL
 
+```mysql
+# in mysql shell,
+# CREATE MySQL DB
+create database WESTARBUCKS character set utf8mb4 collate utf8mb4_general_ci;
+```
+
 ```shell
+# in project root
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py crawldata
-python manage.py applydata
+python manage.py populate_db
 python manage.py runserver
 ```

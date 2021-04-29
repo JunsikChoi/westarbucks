@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Menu(models.Model):
-    name = models.CharField(max_length=45)
+    name = models.CharField(max_length=45, unique=True)
 
     class Meta:
         verbose_name_plural = "Menus"
@@ -13,7 +13,7 @@ class Menu(models.Model):
 
 class Category(models.Model):
     menu = models.ForeignKey("Menu", on_delete=models.CASCADE)
-    name = models.CharField(max_length=45)
+    name = models.CharField(max_length=45, unique=True)
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -23,7 +23,7 @@ class Category(models.Model):
 
 
 class Allegy(models.Model):
-    name = models.CharField(max_length=45)
+    name = models.CharField(max_length=45, unique=True)
 
     class Meta:
         verbose_name_plural = "Allegies"
@@ -95,7 +95,7 @@ class Product(models.Model):
     nutrition = models.ForeignKey("Nutrition", on_delete=models.CASCADE)
     allegies = models.ManyToManyField("Allegy", blank=True, through="ProductAllegy")
     korean_name = models.CharField(max_length=45)
-    english_name = models.CharField(max_length=45)
+    english_name = models.CharField(max_length=255)
     description = models.TextField()
 
     class Meta:
