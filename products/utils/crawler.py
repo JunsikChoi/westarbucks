@@ -4,9 +4,13 @@ from pprint import pprint
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
+STARBUCKS_URL = "https://www.starbucks.co.kr/menu/drink_list.do"
+FILE_PATH = "./data/starbucks_drinks.csv"
+
 
 def crawl_starbucks_drinks():
-    url = "https://www.starbucks.co.kr/menu/drink_list.do"
+
+    url = STARBUCKS_URL
 
     # Use Selenium without live chrome window.
     options = webdriver.ChromeOptions()
@@ -124,7 +128,7 @@ def crawl_starbucks_drinks():
     return drink_db
 
 
-def save_to_csv(db, file_path):
+def save_to_csv(db, file_path=FILE_PATH):
     print(f"[LOG] SAVING DATA IN CSV TO {file_path}...")
 
     column_names = list(list(db.values())[0].keys())
@@ -139,6 +143,17 @@ def save_to_csv(db, file_path):
     return
 
 
+def load_to_csv(file_path=FILE_PATH):
+    data = {}
+    with open(file_path, "r", encoding="utf-8-sig") as f:
+        reader = csv.reader(f)
+        headers = next(reader)
+        for i, line in enumerate(reader):
+            data[i] = {k: v for k, v in zip(headers, line)}
+    return data
+
+
 if __name__ == "__main__":
     drink_db = crawl_starbucks_drinks()
-    save_to_csv(drink_db, "./data/starbucks_drinks.csv")
+    save_to_csv(drink_db, FILE_PATH)
+    load_to_csv()

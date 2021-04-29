@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from products.utils import crawler
+from products.utils import initialize_db
 
 
 class Command(BaseCommand):
@@ -11,19 +11,18 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-
         path = "./data/{}".format(options["filename"])
-        self.stdout.write(self.style.NOTICE("Start Crawler..."))
-        try:
-            drink_db = crawler.crawl_starbucks_drinks()
-            crawler.save_to_csv(drink_db, path)
-        except:
-            self.stdout.write(
-                self.style.ERROR("Something went wrong.. :( \n Error Occurred.")
-            )
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                "Successfully Crawled Data and Stored in {}".format(path)
+        self.stdout.write(self.style.NOTICE("Populating DB..."))
+
+        try:
+            initialize_db.populate_db(path)
+        except Exception as e:
+            print(e)
+            self.stdout.write(
+                self.style.ERROR(
+                    "Something went wrong.. See the error msg above! :( \nError Occurred."
+                )
             )
-        )
+        else:
+            self.stdout.write(self.style.SUCCESS("Successfully Populated DB "))
